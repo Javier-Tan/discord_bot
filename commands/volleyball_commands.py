@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from exceptions.volleyball_exceptions import ImageNotFoundException
 
 URL = "https://volleyballdays.com/"
 FIXTURE_URL = URL + "#fixturesun"
@@ -19,5 +20,7 @@ class volleyball_commands():
         soup = BeautifulSoup(page.content, "html.parser")
         # Had to hard code id = image32 for now - may be a better way to find the image
         result = soup.find(id = "image32").find("a").find("img")
-        if result:
+        if result == None:
+            raise ImageNotFoundException
+        else:
             return URL + result['data-src']
