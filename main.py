@@ -1,22 +1,20 @@
+# Dependencies
 import asyncio
 import discord
-import logging
 import os
+import sys
 from dotenv import load_dotenv
 from discord.ext import commands
 
+COMMAND_PREFIX = '!'
 # Loads environmental variables
 load_dotenv()
-
 TOKEN = os.getenv("DISCORD_TOKEN")
-COMMAND_PREFIX = '!'
-
-handler = logging.FileHandler(filename = 'bot.log', encoding = 'utf-8', mode = 'w')
 
 # Initialize the bot
 intents = discord.Intents.default()
 intents.message_content = True
-bot = commands.Bot(command_prefix = COMMAND_PREFIX, intents = intents, help_command = commands.MinimalHelpCommand())
+bot = commands.Bot(command_prefix = COMMAND_PREFIX, intents = intents, help_command = commands.DefaultHelpCommand())
 
 # Load all cogs
 async def load():
@@ -30,4 +28,18 @@ async def main():
     await bot.start(TOKEN)
 
 if __name__ == "__main__":
+    # Setup logging
+    import logging
+
+    file_handler = logging.FileHandler(filename='tmp.log')
+    stdout_handler = logging.StreamHandler(stream=sys.stdout)
+    handlers = [file_handler, stdout_handler]
+
+    logging.basicConfig(
+        level=logging.INFO, 
+        format='[%(asctime)s] {%(filename)s:%(lineno)d} %(levelname)s - %(message)s',
+        handlers=handlers
+    )
+
+    # Execute main
     asyncio.run(main())
