@@ -8,7 +8,7 @@ A bash script has been made to setup the virtual environment on linux.
 source _setup_venv.sh
 ```
 
-Run the bot from the home directory with the command
+Run the bot locally from the home directory with the command
 ```
 python3 main.py
 ```
@@ -20,3 +20,6 @@ Each cog has a related "commands" file that provides the logic behind each imple
 
 ## Testing
 Run the tests through `python -m pytest tests/` or vscode's testing functionality
+
+## Token storage
+Create a `.env` file with property `DISCORD_TOKEN={your_token}`, do not push this, the file will (should) be gitignored. Double check before pushing to a public repository at your own risk.
