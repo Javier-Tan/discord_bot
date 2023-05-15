@@ -1,7 +1,7 @@
 import logging
 import discord
 from discord.ext import commands
-from commands.admin_commands import admin_commands
+from discord_bot.commands.admin_commands import admin_commands
 
 class admin(commands.Cog):
     def __init__(self, bot):

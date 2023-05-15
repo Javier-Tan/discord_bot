@@ -1,8 +1,8 @@
 import logging
 import discord
 from discord.ext import commands
-from commands.volleyball_commands import volleyball_commands
-from exceptions.volleyball_exceptions import ImageNotFoundException
+from discord_bot.commands.volleyball_commands import volleyball_commands
+from discord_bot.exceptions.volleyball_exceptions import ImageNotFoundException
 
 class volleyball(commands.Cog):
     def __init__(self, bot):

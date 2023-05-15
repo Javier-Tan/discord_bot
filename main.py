@@ -18,9 +18,9 @@ bot = commands.Bot(command_prefix = COMMAND_PREFIX, intents = intents, help_comm
 
 # Load all cogs
 async def load():
-    for filename in os.listdir('./cogs'):
+    for filename in os.listdir('discord_bot/cogs'):
         if filename.endswith('.py'):
-            await bot.load_extension(f'cogs.{filename[:-3]}')
+            await bot.load_extension(f'discord_bot.cogs.{filename[:-3]}')
 
 # Start the bot
 async def main():

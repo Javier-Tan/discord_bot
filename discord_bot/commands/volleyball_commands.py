@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from exceptions.volleyball_exceptions import ImageNotFoundException
+from discord_bot.exceptions.volleyball_exceptions import ImageNotFoundException
 
 class volleyball_commands(): 
     def __init__(self):
