@@ -25,7 +25,7 @@ docker build -t discord_bot .
 
 To run docker image (named discord_bot), run command
 ```
-docker build -t discord_bot .
+docker run -d discord_bot
 ```
 
 Not recommended, but alternatively, run the bot locally from the home directory with the command:
