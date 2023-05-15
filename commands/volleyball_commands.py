@@ -14,13 +14,15 @@ class volleyball_commands():
         result = soup.find(id = "image36").find("a").find("img")
         if result:
             return URL + result['data-src']
+        else:
+            raise ImageNotFoundException("Fixtures")
 
     async def ranking():
         page = requests.get(LADDER_URL)
         soup = BeautifulSoup(page.content, "html.parser")
         # Had to hard code id = image32 for now - may be a better way to find the image
         result = soup.find(id = "image32").find("a").find("img")
-        if result == None:
-            raise ImageNotFoundException
-        else:
+        if result:
             return URL + result['data-src']
+        else:
+            raise ImageNotFoundException("Ranking")
