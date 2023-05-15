@@ -11,13 +11,22 @@ If you have have not created a bot token, read more about creating your bot and 
 ### venv
 It is highly recommended to develop in a venv to contain the projects required dependencies.
 
-A bash script has been made to setup the virtual environment on linux. 
-```
-source _setup_venv.sh
-```
+A bash script has been made to setup the virtual environment on linux, simply run `source _setup_venv.sh`
+
+A windows script has been made to setup the virtual environment, simply run `_setup_windows_venv.bat`
 
 ### Starting the bot
 A Dockerfile is provided for local development or running your bot locally (requires [Docker Desktop](https://www.docker.com/products/docker-desktop/))
+
+To build docker image, run command
+```
+docker build -t discord_bot .
+```
+
+To run docker image (named discord_bot), run command
+```
+docker build -t discord_bot .
+```
 
 Not recommended, but alternatively, run the bot locally from the home directory with the command:
 ```
