@@ -1,3 +1,6 @@
 class admin_commands(): 
-    async def ping():
+    def __init__(self):
+        pass
+
+    async def ping(self):
         return 'PONG'

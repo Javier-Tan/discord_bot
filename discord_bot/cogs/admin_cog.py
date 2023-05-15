@@ -16,7 +16,7 @@ class admin(commands.Cog):
     async def ping(self, ctx):
         ''' Responds with pong, used to check if bot is functional '''
         logging.info('Ping command executed.')
-        response = await admin_commands.ping()
+        response = await admin_commands().ping()
         await ctx.send(response)
 
 async def setup(bot):
