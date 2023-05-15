@@ -30,7 +30,7 @@ docker run -d discord_bot
 
 Not recommended, but alternatively, run the bot locally from the home directory with the command:
 ```
-python3 main.py
+python3 -m discord_bot
 ```
 
 ## Structure
