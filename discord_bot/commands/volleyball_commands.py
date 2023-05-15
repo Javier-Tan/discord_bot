@@ -12,6 +12,8 @@ class volleyball_commands():
         page = requests.get(self.FIXTURE_URL)
         soup = BeautifulSoup(page.content, "html.parser")
         # Had to hard code id = image36 for now - may be a better way to find the image
+
+        # If id fails, None.find() error occurs (needs fix)
         result = soup.find(id = "image36").find("a").find("img")
         if result:
             return self.URL + result['data-src']
@@ -22,6 +24,8 @@ class volleyball_commands():
         page = requests.get(self.LADDER_URL)
         soup = BeautifulSoup(page.content, "html.parser")
         # Had to hard code id = image32 for now - may be a better way to find the image
+
+        # If id fails, None.find() error occurs (needs fix)
         result = soup.find(id = "image32").find("a").find("img")
         if result:
             return self.URL + result['data-src']
