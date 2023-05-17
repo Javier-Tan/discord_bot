@@ -14,7 +14,8 @@ class volleyball(commands.Cog):
         logging.info('Volleyball fixture command requested.')
         try:
             response = await volleyball_commands().fixtures()
-            await ctx.send(response)
+            await ctx.send(response[0]) # last update date
+            await ctx.send(response[1]) # fixture image
         except ImageNotFoundException as e:
             ctx.send(e.message)
 
@@ -24,7 +25,8 @@ class volleyball(commands.Cog):
         logging.info('Volleyball ranking command requested.')
         try:
             response = await volleyball_commands().ranking()
-            await ctx.send(response)
+            await ctx.send(response[0]) # last update date
+            await ctx.send(response[1]) # ranking image
         except ImageNotFoundException as e:
             ctx.send(e.message)
         
