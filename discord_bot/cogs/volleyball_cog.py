@@ -10,23 +10,21 @@ class volleyball(commands.Cog):
 
     @commands.command()
     async def vb_fixtures(self, ctx):
-        ''' Scrapes volleyball league website for fixture image '''
+        ''' Scrapes volleyball league website for fixture details '''
         logging.info('Volleyball fixture command requested.')
         try:
             response = await volleyball_commands().fixtures()
-            await ctx.send(response[0]) # last update date
-            await ctx.send(response[1]) # fixture image
+            await ctx.send(response)
         except ImageNotFoundException as e:
             ctx.send(e.message)
 
     @commands.command()
     async def vb_ranking(self, ctx):
-        ''' Scrapes volleyball league website for ranking image '''
+        ''' Scrapes volleyball league website for ranking details '''
         logging.info('Volleyball ranking command requested.')
         try:
             response = await volleyball_commands().ranking()
-            await ctx.send(response[0]) # last update date
-            await ctx.send(response[1]) # ranking image
+            await ctx.send(response)
         except ImageNotFoundException as e:
             ctx.send(e.message)
         
