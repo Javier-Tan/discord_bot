@@ -9,6 +9,8 @@ class math(commands.Cog):
 
     @commands.command()
     async def rng(self, ctx):
+        ''' Returns a random integer between 1 and 100 inclusive '''
+
         logging.info('Random number generator command executed.')
         try:
             response = await math_commands.rng()
