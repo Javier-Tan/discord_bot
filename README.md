@@ -1,5 +1,14 @@
 # Developers notes
-This project was tested using Python 3.10 using a Python virtual environment ('venv'). It makes use of a python API wrapper for Discord.
+This project was tested using Python 3.10 using a Python virtual environment ('venv'). It makes use of a Python API wrapper for Discord, [Discord.py](https://discordpy.readthedocs.io/en/stable/index.html).
+
+This project aims to incorporate:
+- Proper branching
+- Proper logging
+- Software architecture
+- Github issue usage
+- Exception handling and custom exceptions (W.I.P)
+- Testing (W.I.P)
+- CI/CD (W.I.P)
 
 ## Getting started
 
@@ -30,7 +39,7 @@ docker run -d discord_bot
 
 Not recommended, but alternatively, run the bot locally from the home directory with the command:
 ```
-python3 -m discord_bot
+python -m discord_bot
 ```
 
 ## Structure
@@ -39,4 +48,4 @@ This bot makes use of discord.py's "cog" feature to group related commands.
 Each cog has a related "commands" file that provides the logic behind each implemented command, allowing for unit testing of each command.
 
 ## Testing
-Run the tests through `python3 -m pytest tests/` or vscode's testing functionality
+Run the tests through `python -m pytest tests/` or vscode's testing functionality
