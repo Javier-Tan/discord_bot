@@ -6,6 +6,7 @@ This project aims to incorporate:
 - Proper logging
 - Software architecture
 - Github issue usage
+- Python typing
 - Exception handling and custom exceptions (W.I.P)
 - Testing (W.I.P)
 - CI/CD (W.I.P)

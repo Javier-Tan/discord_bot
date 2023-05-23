@@ -1,3 +1,3 @@
-async def ping():
+async def ping() -> str:
     ''' Return PONG string '''
     return 'PONG'
