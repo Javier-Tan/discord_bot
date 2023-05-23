@@ -1,7 +1,7 @@
 import pytest
-from discord_bot.commands.admin_commands import admin_commands
+from discord_bot.commands.admin_commands import *
 
 async def test_ping():
     ''' Returns pong to a ping to check if bot is functional '''
-    response = await admin_commands().ping()
+    response = await ping()
     assert response == 'PONG'

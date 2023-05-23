@@ -1,7 +1,7 @@
 import logging
 import discord
 from discord.ext import commands
-from discord_bot.commands.math_commands import math_commands
+from discord_bot.commands.math_commands import *
 
 class math(commands.Cog):
     def __init__(self, bot):
@@ -13,7 +13,7 @@ class math(commands.Cog):
 
         logging.info('Random number generator command executed.')
         try:
-            response = await math_commands.rng()
+            response = await rng()
             await ctx.send(response)
         except Exception as e:
             await ctx.send("error")

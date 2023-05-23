@@ -1,7 +1,7 @@
 import logging
 import discord
 from discord.ext import commands
-from discord_bot.commands.volleyball_commands import volleyball_commands
+from discord_bot.commands.volleyball_commands import *
 from discord_bot.exceptions.volleyball_exceptions import ImageNotFoundException
 
 class volleyball(commands.Cog):
@@ -13,7 +13,7 @@ class volleyball(commands.Cog):
         ''' Scrapes volleyball league website for fixture details '''
         logging.info('Volleyball fixture command requested.')
         try:
-            response = await volleyball_commands().fixtures()
+            response = await vb_fixtures()
             await ctx.send(response)
         except ImageNotFoundException as e:
             ctx.send(e.message)
@@ -23,7 +23,7 @@ class volleyball(commands.Cog):
         ''' Scrapes volleyball league website for ranking details '''
         logging.info('Volleyball ranking command requested.')
         try:
-            response = await volleyball_commands().ranking()
+            response = await vb_ranking()
             await ctx.send(response)
         except ImageNotFoundException as e:
             ctx.send(e.message)
