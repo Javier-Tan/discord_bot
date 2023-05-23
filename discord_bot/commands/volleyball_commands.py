@@ -47,7 +47,7 @@ async def vb_ranking() -> str:
 
     # Find last updated date
     try:
-        last_updated_element_list = soup.find(id = "text11").string.split(" ")
+        last_updated_element_list = soup.find(id = "text12").string.split(" ")
     except (AttributeError) as e:
         raise DateNotFoundException("Ranking")
     
