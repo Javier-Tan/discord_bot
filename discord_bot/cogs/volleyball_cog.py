@@ -2,7 +2,7 @@ import logging
 import discord
 from discord.ext import commands
 from discord_bot.commands.volleyball_commands import *
-from discord_bot.exceptions.volleyball_exceptions import ImageNotFoundException
+from discord_bot.exceptions.volleyball_exceptions import ImageNotFoundException, DateNotFoundException
 
 class volleyball(commands.Cog):
     def __init__(self, bot):
@@ -15,8 +15,9 @@ class volleyball(commands.Cog):
         try:
             response = await vb_fixtures()
             await ctx.send(response)
-        except ImageNotFoundException as e:
-            ctx.send(e.message)
+        except (ImageNotFoundException, DateNotFoundException) as e:
+            await ctx.send(e.message)
+            raise e
 
     @commands.command()
     async def vb_ranking(self, ctx):
@@ -25,8 +26,9 @@ class volleyball(commands.Cog):
         try:
             response = await vb_ranking()
             await ctx.send(response)
-        except ImageNotFoundException as e:
-            ctx.send(e.message)
+        except (ImageNotFoundException, DateNotFoundException) as e:
+            await ctx.send(e.message)
+            raise e
         
 async def setup(bot):
     await bot.add_cog(volleyball(bot))
