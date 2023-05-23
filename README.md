@@ -1,16 +1,6 @@
 # Developers notes
 This project was tested using Python 3.10 using a Python virtual environment ('venv'). It makes use of a Python API wrapper for Discord, [Discord.py](https://discordpy.readthedocs.io/en/stable/index.html).
 
-This project aims to incorporate:
-- Proper branching
-- Proper logging
-- Software architecture
-- Github issue usage
-- Python typing
-- Exception handling and custom exceptions (W.I.P)
-- Testing (W.I.P)
-- CI/CD (W.I.P)
-
 ## Getting started
 
 ### Token storage
@@ -48,5 +38,14 @@ This bot makes use of discord.py's "cog" feature to group related commands.
 
 Each cog has a related "commands" file that provides the logic behind each implemented command, allowing for unit testing of each command.
 
+`__main__.py` contains the logic to add all cogs to the bot and bring the bot online when run.
+
 ## Testing
+Each command file has it's own testing file, and each command should be tested (expected result and expected exceptions)
+
 Run the tests through `python -m pytest tests/` or vscode's testing functionality
+
+## Deployment
+### Github actions
+Currently github actions only runs (and fails/passes according to) our unit tests.
+
