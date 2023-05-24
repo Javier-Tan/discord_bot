@@ -4,4 +4,4 @@ COPY . /app
 WORKDIR /app
 RUN pip install -U -r requirements.txt
 
-CMD ["python3", "main.py"]
+CMD ["python3", "-m", "discord_bot"]
