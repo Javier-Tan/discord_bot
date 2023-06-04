@@ -15,7 +15,7 @@ async def vb_fixtures() -> str:
     # Had to hard code id = image36 for now - may be a better way to find the image
     # If id fails, None.find() error occurs (needs fix)
     try:
-        fixtures_image_URL = URL + soup.find(id = "image36").find("a").find("img")['data-src']
+        fixtures_image_URL = URL + soup.find(id = "image31").find("a").find("img")['data-src']
     except (AttributeError, KeyError) as e:
         raise ImageNotFoundException("Fixtures")
 
