@@ -26,7 +26,7 @@ async def vb_fixtures() -> str:
     except (AttributeError) as e:
         raise DateNotFoundException("Fixtures")
 
-    last_updated_date = datetime.strptime(last_updated_element_list[-1], '%d/%m/%Y')
+    last_updated_date = datetime.strptime(last_updated_element_list[-3], '%d/%m/%Y')
     last_updated_formatted = last_updated_date.strftime("%d %b %Y")
     # Calculate days ago
     last_updated_days_ago = (datetime.today() - last_updated_date).days
@@ -41,7 +41,7 @@ async def vb_ranking() -> str:
 
     # Had to hard code id = image32 for now - may be a better way to find the image
     try:
-        ranking_image_URL = URL + soup.find(id = "image32").find("a").find("img")['data-src']
+        ranking_image_URL = URL + soup.find(id = "image37").find("a").find("img")['data-src']
     except (AttributeError, KeyError) as e:
         raise ImageNotFoundException("Ranking")
 
