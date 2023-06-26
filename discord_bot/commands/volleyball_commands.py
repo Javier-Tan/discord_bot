@@ -7,7 +7,7 @@ URL = "https://volleyballdays.com/"
 FIXTURE_URL = URL + "#fixturesun"
 LADDER_URL = URL + "#laddersun"
 
-async def vb_fixtures() -> str:
+async def vb_fixtures(imgid, dateid) -> str:
     ''' Returns a string indicating last updated date, how many days ago that was, and the image URL of the league fixtures'''
     page = requests.get(FIXTURE_URL)
     soup = BeautifulSoup(page.content, "html.parser")
@@ -15,14 +15,14 @@ async def vb_fixtures() -> str:
     # Had to hard code id = image36 for now - may be a better way to find the image
     # If id fails, None.find() error occurs (needs fix)
     try:
-        fixtures_image_URL = URL + soup.find(id = "image31").find("a").find("img")['data-src']
+        fixtures_image_URL = URL + soup.find(id = imgid).find("a").find("img")['data-src']
     except (AttributeError, KeyError) as e:
         raise ImageNotFoundException("Fixtures")
 
     # Find last updated date
     #last_updated_element_list = soup.find(id = "text17").string.split(" ")
     try:
-        last_updated_element_list = soup.find(id = "text17").find("span").text.split(" ")
+        last_updated_element_list = soup.find(id = dateid).find("span").text.split(" ")
     except (AttributeError) as e:
         raise DateNotFoundException("Fixtures")
 
@@ -34,20 +34,20 @@ async def vb_fixtures() -> str:
     return f"As of {last_updated_formatted}, ({last_updated_days_ago} days ago) {fixtures_image_URL}"
         
     
-async def vb_ranking() -> str:
+async def vb_ranking(imgid, dateid) -> str:
     ''' Returns a string indicating last updated date, how many days ago that was, and the image URL of the league rankings'''
     page = requests.get(LADDER_URL)
     soup = BeautifulSoup(page.content, "html.parser")
 
     # Had to hard code id = image32 for now - may be a better way to find the image
     try:
-        ranking_image_URL = URL + soup.find(id = "image37").find("a").find("img")['data-src']
+        ranking_image_URL = URL + soup.find(id = imgid).find("a").find("img")['data-src']
     except (AttributeError, KeyError) as e:
         raise ImageNotFoundException("Ranking")
 
     # Find last updated date
     try:
-        last_updated_element_list = soup.find(id = "text12").string.split(" ")
+        last_updated_element_list = soup.find(id = dateid).string.split(" ")
     except (AttributeError) as e:
         raise DateNotFoundException("Ranking")
     
