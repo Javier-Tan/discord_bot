@@ -12,7 +12,7 @@ class music(commands.Cog):
         self.current = None
 
     @commands.command()
-    async def play(self, ctx, search):
+    async def play(self, ctx, *, search):
         ''' Queues songs by URL '''
         logging.info("play command invoked")
 
@@ -88,6 +88,9 @@ class music(commands.Cog):
     @commands.command()
     async def queue(self, ctx):
         ''' Display queue of songs '''
+        if self.current == None:
+            await ctx.send("Nothing's happening here")
+            return
         output = "**Currently playing: " + self.current + "**\n"
         for i in range(1, len(self.queue) + 1):
             output += str(i) + ". " + self.queue[i-1][1] + "\n"

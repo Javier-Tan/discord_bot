@@ -11,7 +11,7 @@ async def is_connected(ctx):
 async def join(vc, ctx):
         ''' Returns channel to be joined '''
         await vc.connect()
-        await ctx.send(f"I'm in **{vc}** now")
+        await ctx.send(f"I'm chilling in **{vc}** now")
 
 yt_dlp.utils.bug_reports_message = lambda: ''
 
@@ -42,9 +42,11 @@ class YTDLSource(discord.PCMVolumeTransformer):
         self.url = ""
 
     @classmethod
-    async def from_url(cls, url, *, loop=None):
-        loop = loop or asyncio.get_event_loop()
+    async def from_url(cls, url, loop=None):
+        loop = loop or asyncio.get_event_loop()    
         with yt_dlp.YoutubeDL(ytdl_format_options) as ydl:
+            if "https://" not in url:
+                url = ydl.extract_info(f"ytsearch:{url}", download=False)['entries'][0]['webpage_url']
             info = ydl.extract_info(url, download=False)
             audio_url = info['formats'][8]['url']
             title = info['title']
