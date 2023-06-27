@@ -15,6 +15,7 @@ class music(commands.Cog):
         self.bot = bot
         self.queue = []
         self.is_playing = False
+        self.current = None
 
     @commands.command()
     async def play(self, ctx, search):
@@ -39,9 +40,11 @@ class music(commands.Cog):
 
         if not vc.is_playing():
             logging.info("Playing: " + file[1])
+            self.current = file[1]
             vc.play(discord.FFmpegPCMAudio(source=file[0]), after=lambda x=None: self.play_next(ctx = ctx))
         else:
             self.queue.append(file)
+            logging.info("Queued " + file[1])
             await ctx.send("Queued " + file[1])
 
     def play_next(self, ctx):
@@ -49,10 +52,11 @@ class music(commands.Cog):
         logging.info("play_next command invoked")
         if len(self.queue) > 0:
             song = self.queue.pop(0)
+            self.current = song[1]
             vc = ctx.guild.voice_client
             logging.info("Playing: " + song[1])
             vc.play(discord.FFmpegPCMAudio(source=song[0]), after = lambda x=None: self.play_next(ctx = ctx))
-            
+
     @commands.command()
     async def skip(self, ctx):
         ''' skip current song '''
