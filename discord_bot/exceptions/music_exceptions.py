@@ -12,3 +12,8 @@ class UserNotInChannelException(Exception):
     def __init__(self):
         self.message = "User not in a channel currently"
         super().__init__(self.message)
+
+class InvalidNumberException(Exception):
+    def __init__(self):
+        self.message = "Invalid number inputted"
+        super().__init__(self.message)

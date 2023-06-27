@@ -2,7 +2,7 @@ import logging
 import discord
 from discord.ext import commands
 from discord_bot.commands.music_commands import *
-from discord_bot.exceptions.music_exceptions import BotNotInChannelException, UserNotInChannelException, NotPlayingAudioException
+from discord_bot.exceptions.music_exceptions import BotNotInChannelException, UserNotInChannelException, NotPlayingAudioException, InvalidNumberException
 
 class music(commands.Cog):
     def __init__(self, bot):
@@ -55,6 +55,7 @@ class music(commands.Cog):
             vc = ctx.guild.voice_client
             logging.info("Playing: " + song[1])
             vc.play(discord.FFmpegPCMAudio(source=song[0], before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",options="-vn"), after = lambda x=None: self.play_next(ctx = ctx))
+        self.current = None
 
     @commands.command()
     async def skip(self, ctx):
@@ -82,7 +83,28 @@ class music(commands.Cog):
             self.queue = []
         except BotNotInChannelException as e:
             await ctx.send("I'm not in a channel...")
-            logging.info(e.message)            
+            logging.info(e.message)         
+
+    @commands.command()
+    async def queue(self, ctx):
+        ''' Display queue of songs '''
+        output = "**Currently playing: " + self.current + "**\n"
+        for i in range(1, len(self.queue) + 1):
+            output += str(i) + ". " + self.queue[i-1][1] + "\n"
+        await ctx.send(output)
+
+    @commands.command()
+    async def remove(self, ctx, numstring):
+        ''' Remove song from queue '''
+        num = int(numstring)
+        try:
+            if num <= 0 or num > len(self.queue):
+                raise InvalidNumberException()
+            await ctx.send("Removed **" + numstring + ". " + self.queue[num - 1][1] + "** from the queue")
+            self.queue.pop(num - 1)
+        except InvalidNumberException as e:
+            await ctx.send("There's no song queued up at that number...")
+            logging.info(e.message)
 
     @commands.command()
     async def test(self, ctx):
