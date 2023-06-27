@@ -1,6 +1,5 @@
 
 import discord
-import nacl
 import yt_dlp
 import asyncio
 
