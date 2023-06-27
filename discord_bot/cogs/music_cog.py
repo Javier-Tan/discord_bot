@@ -2,10 +2,6 @@ import logging
 import discord
 from discord.ext import commands
 from discord_bot.commands.music_commands import *
-import yt_dlp
-import nacl
-import ffmpeg
-import asyncio
 from discord_bot.exceptions.music_exceptions import BotNotInChannelException, UserNotInChannelException, NotPlayingAudioException
 
 class music(commands.Cog):
@@ -19,6 +15,8 @@ class music(commands.Cog):
     async def play(self, ctx, search):
         ''' Queues songs by URL '''
         logging.info("play command invoked")
+
+        # connect bot into channel of user
         isconnected = await is_connected(ctx)
         if not isconnected:
             try:
@@ -32,14 +30,17 @@ class music(commands.Cog):
                 logging.info(e.message)
                 return
 
+        # obtain audio url
         file = await YTDLSource.from_url(search, loop=self.bot.loop)
         
         vc = ctx.voice_client
 
+        # immediately play song if bot is not currently playing audio
         if not vc.is_playing():
             logging.info("Playing: " + file[1])
             self.current = file[1]
             vc.play(discord.FFmpegPCMAudio(source=file[0], before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",options="-vn"), after=lambda x=None: self.play_next(ctx = ctx))
+        # queue song
         else:
             self.queue.append(file)
             logging.info("Queued " + file[1])
@@ -67,27 +68,25 @@ class music(commands.Cog):
         except NotPlayingAudioException as e:
             await ctx.send("Not playing any music right now")
             logging.info(e.message)
-            return
-
     
     @commands.command()
     async def disconnect(self, ctx):
         ''' Disconnect bot '''
         isconnected = await is_connected(ctx)
-        if(not isconnected): # raise custom exception
-            await ctx.send("I'm not in a channel...")
-            logging.info('Bot was already disconnected when disconnect command invoked')
-            return
-        else:
+        try:
+            if(not isconnected): 
+                raise BotNotInChannelException()
             await ctx.send("Oyasumi")
             voice_channel = ctx.message.guild.voice_client
             await voice_channel.disconnect()
             self.queue = []
+        except BotNotInChannelException as e:
+            await ctx.send("I'm not in a channel...")
+            logging.info(e.message)            
 
     @commands.command()
     async def test(self, ctx):
         await ctx.send("TESTING")
-
 
 async def setup(bot):
     await bot.add_cog(music(bot))
