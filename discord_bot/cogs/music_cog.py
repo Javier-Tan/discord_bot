@@ -96,6 +96,11 @@ class music(commands.Cog):
     @commands.command()
     async def remove(self, ctx, numstring):
         ''' Remove song from queue '''
+        if(numstring == "all"):
+            await ctx.send("Wiped entire queue")
+            self.queue = []
+            return
+
         num = int(numstring)
         try:
             if num <= 0 or num > len(self.queue):
