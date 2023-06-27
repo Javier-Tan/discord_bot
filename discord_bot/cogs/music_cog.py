@@ -8,8 +8,6 @@ import ffmpeg
 import asyncio
 from discord_bot.exceptions.music_exceptions import BotNotInChannelException, UserNotInChannelException, NotPlayingAudioException
 
-FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5','options': '-vn'}
-
 class music(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -41,7 +39,7 @@ class music(commands.Cog):
         if not vc.is_playing():
             logging.info("Playing: " + file[1])
             self.current = file[1]
-            vc.play(discord.FFmpegPCMAudio(source=file[0]), after=lambda x=None: self.play_next(ctx = ctx))
+            vc.play(discord.FFmpegPCMAudio(source=file[0], before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",options="-vn"), after=lambda x=None: self.play_next(ctx = ctx))
         else:
             self.queue.append(file)
             logging.info("Queued " + file[1])
@@ -55,7 +53,7 @@ class music(commands.Cog):
             self.current = song[1]
             vc = ctx.guild.voice_client
             logging.info("Playing: " + song[1])
-            vc.play(discord.FFmpegPCMAudio(source=song[0]), after = lambda x=None: self.play_next(ctx = ctx))
+            vc.play(discord.FFmpegPCMAudio(source=song[0], before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",options="-vn"), after = lambda x=None: self.play_next(ctx = ctx))
 
     @commands.command()
     async def skip(self, ctx):
