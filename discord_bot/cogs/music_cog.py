@@ -6,6 +6,7 @@ import yt_dlp
 import nacl
 import ffmpeg
 import asyncio
+from discord_bot.exceptions.music_exceptions import BotNotInChannelException, UserNotInChannelException, NotPlayingAudioException
 
 FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5','options': '-vn'}
 
@@ -21,36 +22,55 @@ class music(commands.Cog):
         logging.info("play command invoked")
         isconnected = await is_connected(ctx)
         if not isconnected:
-            if (ctx.message.author.voice == None): # raise a custom exception
-                await ctx.send("Go join a channel first")
-                logging.info('User was not in voice channel when invoking bot join')
-                return
-            else:
+            try:
+                if (ctx.message.author.voice == None):
+                    raise UserNotInChannelException()
+                
                 vc = ctx.message.author.voice.channel
                 await join(vc, ctx)
+            except UserNotInChannelException as e:
+                await ctx.send("Go join a channel first")
+                logging.info(e.message)
+                return
 
-        [filename, title] = await YTDLSource.from_url(search, loop=self.bot.loop)
-        self.queue.append(filename)
-        vc = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
+        file = await YTDLSource.from_url(search, loop=self.bot.loop)
+        
+        vc = ctx.voice_client
 
         if not vc.is_playing():
-            vc.play(discord.FFmpegPCMAudio(source=self.queue[0]), after=lambda e: self.play_next(self, ctx))
-        
-        outputstring = filename.split("[")[0]
-        await ctx.send("Queued " + title)
+            logging.info("Playing: " + file[1])
+            vc.play(discord.FFmpegPCMAudio(source=file[0]), after=lambda x=None: self.play_next(ctx = ctx))
+        else:
+            self.queue.append(file)
+            await ctx.send("Queued " + file[1])
 
-    def play_next(self, ctx, song):
-        ''' play music until queue is empty'''
-        if len(self.queue) >= 1:
-            del self.queue[0]
-            vc = discord.utils.get(self.bot.voice_clients, guild=ctx.guild)
-            vc.play(discord.FFmpegPCMAudio(source=song), after=lambda e: self.play_next(self, ctx))
-            asyncio.run_coroutine_threadsafe(ctx.send("No more songs in queue."), self.bot.loop)
+    def play_next(self, ctx):
+        ''' play music until queue is empty '''
+        logging.info("play_next command invoked")
+        if len(self.queue) > 0:
+            song = self.queue.pop(0)
+            vc = ctx.guild.voice_client
+            logging.info("Playing: " + song[1])
+            vc.play(discord.FFmpegPCMAudio(source=song[0]), after = lambda x=None: self.play_next(ctx = ctx))
             
+    @commands.command()
+    async def skip(self, ctx):
+        ''' skip current song '''
+        logging.info("skip command invoked")
+        vc = ctx.voice_client
+        try:
+            if not vc.is_playing():
+                raise NotPlayingAudioException()
+            vc.stop()
+        except NotPlayingAudioException as e:
+            await ctx.send("Not playing any music right now")
+            logging.info(e.message)
+            return
+
     
     @commands.command()
     async def disconnect(self, ctx):
-        ''' Disconnect bot'''
+        ''' Disconnect bot '''
         isconnected = await is_connected(ctx)
         if(not isconnected): # raise custom exception
             await ctx.send("I'm not in a channel...")
