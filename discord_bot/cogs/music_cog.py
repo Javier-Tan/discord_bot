@@ -47,12 +47,14 @@ class music(commands.Cog):
     def play_next(self, ctx):
         ''' play music until queue is empty '''
         logging.info("play_next command invoked")
-        if len(self.queue) > 0:
+        if len(self.queue) > 1:
             self.queue.pop(0)
             song = self.queue[0]
             vc = ctx.guild.voice_client
             logging.info("Playing: " + song[1])
             vc.play(discord.FFmpegPCMAudio(source=song[0], before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",options="-vn"), after = lambda x=None: self.play_next(ctx = ctx))
+        else:
+            self.queue.pop(0)
 
     @commands.command()
     async def skip(self, ctx):
