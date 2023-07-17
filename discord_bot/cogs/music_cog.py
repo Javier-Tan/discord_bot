@@ -8,7 +8,8 @@ class music(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.queue = []
-        self.isLooping = False
+        self.isLooping = "noloop"
+        self.playlist = []
 
     @commands.command()
     async def play(self, ctx, *, search):
@@ -49,15 +50,27 @@ class music(commands.Cog):
         ''' play music until queue is empty '''
         logging.info("play_next command invoked")
         if len(self.queue) > 1:
-            if not self.isLooping:
+            if self.isLooping == "noloop":
                 self.queue.pop(0)
+            elif self.isLooping == "loopplaylist":
+                playlistsong = self.queue.pop(0)
+                self.playlist.append(playlistsong)
             song = self.queue[0]
             vc = ctx.guild.voice_client
             logging.info("Playing: " + song[1])
             vc.play(discord.FFmpegPCMAudio(source=song[0], before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",options="-vn"), after = lambda x=None: self.play_next(ctx = ctx))
         else:
-            if not self.isLooping:
+            if self.isLooping == "noloop":
                 self.queue.pop(0)
+            elif self.isLooping == "loopplaylist":
+                playlistsong = self.queue.pop(0)
+                self.playlist.append(playlistsong)
+                for track in self.playlist:
+                    self.queue.append(track)
+                song = self.queue[0]
+                vc = ctx.guild.voice_client
+                logging.info("Playing: " + song[1])
+                vc.play(discord.FFmpegPCMAudio(source=song[0], before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",options="-vn"), after = lambda x=None: self.play_next(ctx = ctx))
             else:
                 song = self.queue[0]
                 vc = ctx.guild.voice_client
@@ -127,12 +140,16 @@ class music(commands.Cog):
 
     @commands.command()
     async def loop(self, ctx):
-        self.isLooping = not self.isLooping
-        logging.info("Loop toggle swapped")
-        if self.isLooping:
-            await ctx.send("Looping current song")
+        if self.isLooping == "noloop":
+            self.isLooping = "loopplaylist"
+            await ctx.send("Looping queue")
+        elif self.isLooping == "loopplaylist":
+            self.isLooping = "loopsong"
+            await ctx.send("Looping song")
         else:
+            self.isLooping = "noloop"
             await ctx.send("No longer looping")
+        logging.info("Loop toggle swapped")
 
     @commands.command()
     async def test(self, ctx):
