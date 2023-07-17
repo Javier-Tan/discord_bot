@@ -63,6 +63,7 @@ class music(commands.Cog):
             if self.isLooping == "noloop":
                 self.queue.pop(0)
             elif self.isLooping == "loopplaylist":
+                logging.info("Playlist looped")
                 playlistsong = self.queue.pop(0)
                 self.playlist.append(playlistsong)
                 for track in self.playlist:
