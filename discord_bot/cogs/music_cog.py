@@ -8,6 +8,7 @@ class music(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.queue = []
+        self.isLooping = False
 
     @commands.command()
     async def play(self, ctx, *, search):
@@ -48,13 +49,21 @@ class music(commands.Cog):
         ''' play music until queue is empty '''
         logging.info("play_next command invoked")
         if len(self.queue) > 1:
-            self.queue.pop(0)
+            if not self.isLooping:
+                self.queue.pop(0)
             song = self.queue[0]
             vc = ctx.guild.voice_client
             logging.info("Playing: " + song[1])
             vc.play(discord.FFmpegPCMAudio(source=song[0], before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",options="-vn"), after = lambda x=None: self.play_next(ctx = ctx))
         else:
-            self.queue.pop(0)
+            if not self.isLooping:
+                self.queue.pop(0)
+            else:
+                song = self.queue[0]
+                vc = ctx.guild.voice_client
+                logging.info("Playing: " + song[1])
+                vc.play(discord.FFmpegPCMAudio(source=song[0], before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",options="-vn"), after = lambda x=None: self.play_next(ctx = ctx))
+
 
     @commands.command()
     async def skip(self, ctx):
@@ -115,6 +124,15 @@ class music(commands.Cog):
         except InvalidNumberException as e:
             await ctx.send("There's no song queued up at that number...")
             logging.info(e.message)
+
+    @commands.command()
+    async def loop(self, ctx):
+        self.isLooping = not self.isLooping
+        logging.info("Loop toggle swapped")
+        if self.isLooping:
+            await ctx.send("Looping current song")
+        else:
+            await ctx.send("No longer looping")
 
     @commands.command()
     async def test(self, ctx):
