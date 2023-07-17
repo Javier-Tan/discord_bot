@@ -146,6 +146,7 @@ class music(commands.Cog):
             await ctx.send("Looping queue")
         elif self.isLooping == "loopplaylist":
             self.isLooping = "loopsong"
+            self.playlist = []
             await ctx.send("Looping song")
         else:
             self.isLooping = "noloop"
