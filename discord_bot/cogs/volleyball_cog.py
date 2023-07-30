@@ -13,7 +13,9 @@ class volleyball(commands.Cog):
         ''' Scrapes volleyball league website for fixture details '''
         logging.info('Volleyball fixture command requested.')
         try:
-            response = await vb_fixtures()
+            imgid = "image31"
+            dateid = "text17"
+            response = await vb_fixtures(imgid, dateid)
             await ctx.send(response)
         except (ImageNotFoundException, DateNotFoundException) as e:
             await ctx.send(e.message)
@@ -24,7 +26,9 @@ class volleyball(commands.Cog):
         ''' Scrapes volleyball league website for ranking details '''
         logging.info('Volleyball ranking command requested.')
         try:
-            response = await vb_ranking()
+            imgid = "image37"
+            dateid = "text12"
+            response = await vb_ranking(imgid, dateid)
             await ctx.send(response)
         except (ImageNotFoundException, DateNotFoundException) as e:
             await ctx.send(e.message)
