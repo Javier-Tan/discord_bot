@@ -2,6 +2,8 @@
 import discord
 import yt_dlp
 import asyncio
+#import spotipy
+#from spotipy.oauth2 import SpotifyOAuth
 
 async def is_connected(ctx):
         voice_client = discord.utils.get(ctx.bot.voice_clients, guild = ctx.guild)
@@ -44,7 +46,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
     async def from_url(cls, url, loop=None):
         loop = loop or asyncio.get_event_loop()    
         with yt_dlp.YoutubeDL(ytdl_format_options) as ydl:
-            if "https://" not in url:
+            if not url.startswith("https://"):
                 url = ydl.extract_info(f"ytsearch:{url}", download=False)['entries'][0]['webpage_url']
             info = ydl.extract_info(url, download=False)
             audio_url = info['formats'][8]['url']

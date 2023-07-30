@@ -8,7 +8,7 @@ class music(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.queue = []
-        self.isLooping = "noloop"
+        self.isLooping = "none"
         self.playlist = []
 
     @commands.command()
@@ -26,7 +26,7 @@ class music(commands.Cog):
                 vc = ctx.message.author.voice.channel
                 await join(vc, ctx)
             except UserNotInChannelException as e:
-                await ctx.send("Go join a channel first")
+                await ctx.send("I can't play to an empty crowd. Go join a channel first")
                 logging.info(e.message)
                 return
 
@@ -50,9 +50,9 @@ class music(commands.Cog):
         ''' play music until queue is empty '''
         logging.info("play_next command invoked")
         if len(self.queue) > 1:
-            if self.isLooping == "noloop":
+            if self.isLooping == "none":
                 self.queue.pop(0)
-            elif self.isLooping == "loopplaylist":
+            elif self.isLooping == "playlist":
                 playlistsong = self.queue.pop(0)
                 self.playlist.append(playlistsong)
             song = self.queue[0]
@@ -60,24 +60,19 @@ class music(commands.Cog):
             logging.info("Playing: " + song[1])
             vc.play(discord.FFmpegPCMAudio(source=song[0], before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",options="-vn"), after = lambda x=None: self.play_next(ctx = ctx))
         else:
-            if self.isLooping == "noloop":
+            if self.isLooping == "none":
                 self.queue.pop(0)
-            elif self.isLooping == "loopplaylist":
-                logging.info("Playlist looped")
-                playlistsong = self.queue.pop(0)
-                self.playlist.append(playlistsong)
-                for track in self.playlist:
-                    self.queue.append(track)
-                song = self.queue[0]
-                vc = ctx.guild.voice_client
-                logging.info("Playing: " + song[1])
-                vc.play(discord.FFmpegPCMAudio(source=song[0], before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",options="-vn"), after = lambda x=None: self.play_next(ctx = ctx))
             else:
+                if self.isLooping == "playlist":
+                    logging.info("Playlist looped")
+                    playlistsong = self.queue.pop(0)
+                    self.playlist.append(playlistsong)
+                    for track in self.playlist:
+                        self.queue.append(track)
                 song = self.queue[0]
                 vc = ctx.guild.voice_client
                 logging.info("Playing: " + song[1])
                 vc.play(discord.FFmpegPCMAudio(source=song[0], before_options="-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5",options="-vn"), after = lambda x=None: self.play_next(ctx = ctx))
-
 
     @commands.command()
     async def skip(self, ctx):
@@ -89,7 +84,7 @@ class music(commands.Cog):
                 raise NotPlayingAudioException()
             vc.stop()
         except NotPlayingAudioException as e:
-            await ctx.send("Not playing any music right now")
+            await ctx.send("Skip what?? There's nothing to skip")
             logging.info(e.message)
     
     @commands.command()
@@ -99,19 +94,19 @@ class music(commands.Cog):
         try:
             if(not isconnected): 
                 raise BotNotInChannelException()
-            await ctx.send("Oyasumi")
+            await ctx.send("Have fun sitting in silence")
             voice_channel = ctx.message.guild.voice_client
             await voice_channel.disconnect()
             self.queue = []
         except BotNotInChannelException as e:
-            await ctx.send("I'm not in a channel...")
+            await ctx.send("I can't leave if I wasn't here in the first place")
             logging.info(e.message)         
 
     @commands.command()
     async def queue(self, ctx):
         ''' Display queue of songs '''
         if len(self.queue) == 0:
-            await ctx.send("Nothing's happening here")
+            await ctx.send("**Currently playing: Absolute Silence**")
             return
         output = ""
         for i in range(len(self.queue)):
@@ -141,15 +136,15 @@ class music(commands.Cog):
 
     @commands.command()
     async def loop(self, ctx):
-        if self.isLooping == "noloop":
-            self.isLooping = "loopplaylist"
+        if self.isLooping == "none":
+            self.isLooping = "playlist"
             await ctx.send("Looping queue")
-        elif self.isLooping == "loopplaylist":
-            self.isLooping = "loopsong"
+        elif self.isLooping == "playlist":
+            self.isLooping = "song"
             self.playlist = []
             await ctx.send("Looping song")
         else:
-            self.isLooping = "noloop"
+            self.isLooping = "none"
             await ctx.send("No longer looping")
         logging.info("Loop toggle swapped")
 
