@@ -13,6 +13,7 @@ class volleyball(commands.Cog):
         ''' Scrapes volleyball league website for fixture details '''
         logging.info('Volleyball fixture command requested.')
         try:
+            # Specific elements on the page that may change with time and need to be updated
             imgid = "image31"
             dateid = "text17"
             response = await vb_fixtures(imgid, dateid)
@@ -26,6 +27,7 @@ class volleyball(commands.Cog):
         ''' Scrapes volleyball league website for ranking details '''
         logging.info('Volleyball ranking command requested.')
         try:
+            # Specific elements on the page that may change with time and need to be updated
             imgid = "image37"
             dateid = "text12"
             response = await vb_ranking(imgid, dateid)
